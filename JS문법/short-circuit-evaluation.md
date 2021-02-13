@@ -17,6 +17,19 @@ let AB = U || A  || B
 * **true를 리턴할 가능성이 높은 코드를 가장앞에 놓는다! // 비용이 높은 코드는 나중에 평가하는 것이 좋다고 한다.**
 
 ###단축평가 활용
+
+```js
+//프로그래머스
+function solution(s) {
+    let sLen = s.length;
+    if(sLen !== 4 && sLen !== 6){return false}
+    let answer = s.match(/[A-Z]/gi)
+    let ansLen = answer && s.match(/[A-Z]/gi).length 
+    return answer ? false : (answer & ansLen) === 0 ? true : false;
+}
+```
+
+
 ```js
 const except = function(val, b){
         return val + b
