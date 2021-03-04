@@ -1,45 +1,46 @@
 var solveSudoku = function(board) {
         
-    function isSafe(row, col, num) {
+    function isSafe(r, c, num) {
         
         for(let i = 0; i < board.length; i++) {
-            if(i === row) continue;
-            if(board[i][col] === num) return false;
+            if(i === r) continue;
+            if(board[i][c] === num) return false;
         }
         for(let i = 0; i < board[0].length; i++) {
-            if(i === col) continue;
-            if(board[row][i] === num) return false;
+            if(i === c) continue;
+            if(board[r][i] === num) return false;
         }
-        for(let i = Math.floor(row/3) * 3; i <=  Math.floor(row/3) * 3 + 2; i++) {
-            for(let j = Math.floor(col/3) * 3; j <=  Math.floor(col/3) * 3 + 2; j++) {
-                if(row === i && col === j) continue;
+        for(let i = Math.floor(r/3) * 3; i <=  Math.floor(r/3) * 3 + 2; i++) {
+            for(let j = Math.floor(c/3) * 3; j <=  Math.floor(c/3) * 3 + 2; j++) {
+                if(r === i && c === j) continue;
                 if(board[i][j] === num) return false;
             }
         }
         return true;
     }
     
-    function dfs(row, col) {
-        if(col >= board[0].length) {
+    function dfs(r, c) {
+        
+        if(c >= board[0].length) {
             return true;
         }
-        if(row >= board.length) {
-            row = 0;
-            col += 1;
+        if(r >= board.length) {
+            r = 0;
+            c += 1;
         }
-        if(board[row][col] === 0) {
+        if(board[r][c] === 0) {
             for(let i = 1; i <= 9; i++) {
-                if(isSafe(row, col, i)) {
-                    board[row][col] = i;
-                    if(dfs(row+1, col)) {
+                if(isSafe(r, c, i)) {
+                    board[r][c] = i;
+                    if(dfs(r+1, c)) {//다음 노드 검사 진행. false가 되면 다시 돌아와서 재시작.
                         return true;
                     };
-                    board[row][col] = 0;
+                    board[r][c] = 0;
                 } 
             }
             return false;
         }
-        return dfs(row+1, col);
+        return dfs(r+1, c);
     }
     dfs(0,0);
     return board;
