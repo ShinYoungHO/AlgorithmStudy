@@ -5,21 +5,22 @@
 
 ////////////////////////////////유클리드 호제법///////////////////////////////////
 function solution(n, m) {
+    function gComDivSolve(n,m){
+        if(n<m){return gComDivSolve(m,n)}
+        let rest = n%m
+        if(rest === 0){
+            return m;
+        }
+        return gComDivSolve(m,rest)
+    }    
     //n>m
     let gComDiv = gComDivSolve(n,m);    
-    gComDiv.push(n*m/gComDiv);
+    // gComDiv.push(n*m/gComDiv);
     return gComDiv;  
 }
 
-function gComDivSolve(n,m){
-    if(n<m){return gComDivSolve(m,n)}
-    let rest = n%m
-    if(rest === 0){
-        return [m];
-    }
-    return gComDivSolve(m,rest)
-}
 
+console.log(solution(51000,10000000))
 
 // function solution(n, m) {
 //     //n>m
