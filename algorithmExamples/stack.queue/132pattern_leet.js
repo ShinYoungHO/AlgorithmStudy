@@ -21,3 +21,5 @@ var find132pattern = function(nums) {
     nums[i]
 
 */
+
+// [1,2,3,4,23,34,2]

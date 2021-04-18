@@ -24,3 +24,49 @@ function solution(bridge_length, weight, truck_weights) {
     }
     return count;
 }
+
+
+// solution 2
+function solution(bridge_length, weight, truck_weights) {
+    // 초기값 세팅
+    // bridge_length만큼의 q 완성, 가장 오른쪽에는 첫번째 트럭이 들어간 상태
+    let q = Array(bridge_length - 1).fill(false);
+    let count = 1;
+    let curWeight = truck_weights[0];
+    q.push(truck_weights.shift());
+    // 트럭이 다리에 모두 들어가면 while문이 끝나고,
+    // 그 순간부터 트럭이 빠져나오는데 걸리는 시간은 다리의 길이만큼이다.
+    while (truck_weights.length > 0) {
+      let que = q[0];
+      let nTruckWeight = truck_weights[0];
+      if (que) {
+        // 트럭이 빠져나오는 경우이면
+        curWeight -= q.shift();
+        console.log(curWeight);
+        if (curWeight + nTruckWeight <= weight){
+          curWeight += truck_weights[0]
+          q.push(truck_weights.shift());
+        }
+        else q.push(false);
+        count++;
+      } else {
+        //트럭이 아닌 경우
+        if (curWeight + nTruckWeight > weight) {
+          // false갯수만큼 count++, false갯수만큼 false를 q에 붙여준다.
+          let i = 0;
+          while (q[i] === false) i++;
+          q.splice(0, i);
+          q = [...q, ...Array(i).fill(false)];
+          count += i;
+          continue;
+        } else if (curWeight + nTruckWeight <= weight) {
+          // 트럭이 들어갈 수 있는 경우
+          q.shift();
+          q.push(truck_weights.shift());
+          curWeight += nTruckWeight;
+          count++;
+        }
+      }
+    }
+    return count + bridge_length;
+  }
