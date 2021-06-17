@@ -68,32 +68,22 @@ function newSolution(N, road, K) {
     }
   });
   pq.enqueue({ value: 0, idx: 1 });
-  // visited[1] = true;
-  // map[1].forEach((el, idx) => {
-  //   if (el !== false && el <= K) {
-  //     pq.enqueue({ value: el, idx });
-  //     result.push(idx);
-  //     visited[idx] = true;
-  //   }
-  // });
+
   while (pq.array.length) {
     let a = pq.dequeue();
     let { value, idx } = a;
-    console.log(a);
     map[idx].forEach((val, mapIdx) => {
       if (val && !visited[mapIdx] && val + value <= K) {
-        console.log({ value: val + value, idx: mapIdx });
         pq.enqueue({ value: val + value, idx: mapIdx });
         result.push(mapIdx);
         visited[mapIdx] = true;
       }
     });
-    console.log("pqarr", pq.array);
   }
-  return result;
+  return result.length;
 }
 
-class PriorityQueue {
+class PriorityQueue2 {
   constructor() {
     this.array = [];
     this.size = 0;
@@ -115,12 +105,11 @@ class PriorityQueue {
   }
   dequeue() {
     if (this.size === 1) {
+      this.size--;
       return this.array.pop();
     }
-    console.log(this.array);
     const result = this.array[0];
     this.array[0] = this.array.pop();
-    console.log(this.array);
 
     let i = 0;
     while (true) {
@@ -138,13 +127,84 @@ class PriorityQueue {
         break;
       }
     }
-    console.log("result", result);
+    this.size--;
     return result;
   }
 }
 
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+class PriorityQueue {
+  constructor() {
+    this.memory = [];
+    this.length = 0;
+  }
+
+  push(newItem) {
+    this.length++;
+
+    let isAdded = false;
+
+    for (let i = 0; i < this.memory.length; ++i) {
+      if (this.memory[i].weight > newItem.weight) {
+        this.memory.splice(i, 0, newItem);
+        isAdded = true;
+        break;
+      }
+    }
+
+    if (!isAdded) this.memory.push(newItem);
+  }
+
+  pop() {
+    this.length--;
+    return this.memory.shift();
+  }
+}
+
+function solution3(N, road, K) {
+  const pq = new PriorityQueue();
+  const adj = Array.from(Array(N + 1), () => new Array());
+  const dist = [0, 0];
+
+  for (let i = 0; i < N - 1; ++i) dist.push(Number.MAX_VALUE);
+  road.map((info) => {
+    let [from, to, weight] = info;
+    adj[from].push({ to, weight });
+    adj[to].push({ to: from, weight });
+  });
+  pq.push({
+    to: 1,
+    weight: 0,
+  });
+  // visited에 밸류 저장하는 방식
+  // 중간에 K평가 안하고 저장만 해놓고 나중에 for문 돌면서 평가 :::
+
+  while (pq.length) {
+    let edge = pq.pop();
+    adj[edge.to].map((next) => {
+      if (dist[next.to] > dist[edge.to] + next.weight) {
+        // 다음 밸류와 무게를 더해서
+        // 더 적은 비용으로 갈 수 있는지 확인 후 적은 비용이면 치환
+        dist[next.to] = dist[edge.to] + next.weight;
+        pq.push(next);
+      }
+    });
+  }
+  // 각 마을별로 가는데 필요한 최소비용을 dist가 담고있음. K랑 비교해서 확인
+  let answer = 0;
+  for (let i = 1; i < N + 1; ++i) {
+    if (dist[i] <= K) answer++;
+  }
+
+  return answer;
+}
+
 console.log(
-  newSolution(
+  solution3(
     5,
     [
       [1, 2, 1],
