@@ -55,3 +55,56 @@ function solution(tickets) {
   };
   return DFS(0, "ICN", ["ICN"], cache, map);
 }
+
+// 고친 코드
+
+function solution(tickets) {
+  const map = {};
+  tickets.forEach((ticket, idx) => {
+    const [from, to] = ticket;
+    if (map[from]) {
+      map[from] = [...map[from], [to, idx, false]].sort();
+    } else {
+      map[from] = [[to, idx, false]];
+    }
+  });
+  const cache = Array(tickets.length).fill(false);
+  const DFS = (count, from, resArr, cache, map) => {
+    if (count === cache.length) {
+      return resArr;
+    }
+
+    for (let i = 0; i < map[from].length; i++) {
+      const [nextPort, nextIdx, visited] = map[from][i];
+      if (visited) {
+        continue;
+      }
+      let isDeep = false;
+      if (
+        (!cache[nextIdx] && map[tickets[nextIdx][1]]) ||
+        count + 1 === cache.length
+      ) {
+        isDeep = true;
+        cache[nextIdx] = true;
+        map[from][i][2] = true;
+        resArr.push(tickets[nextIdx][1]);
+        let tempResult = DFS(
+          count + 1,
+          tickets[nextIdx][1],
+          resArr,
+          cache,
+          map
+        );
+        if (tempResult) {
+          return tempResult;
+        }
+      }
+      if (isDeep) {
+        resArr.pop();
+        map[from][i][2] = false;
+        cache[nextIdx] = false;
+      }
+    }
+  };
+  return DFS(0, "ICN", ["ICN"], cache, map);
+}
