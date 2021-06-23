@@ -1,28 +1,16 @@
-// 11~19번줄 오류,
-//
 function solution(numbers) {
-  return numbers
-    .map((el) => el.toString().split(""))
-    .sort((a, b) => sortCallback(a, b))
-    .flat()
-    .join("");
+  let tempRes = numbers.sort((a, b) => sortCallback(a, b));
+
+  while (tempRes[0] === 0 && tempRes.length > 1) {
+    tempRes.shift();
+  }
+  return tempRes.join("");
 }
-function sortCallback(arg1, arg2, n = 0) {
-  if (!arg1[n] || !arg2[n]) {
-    if (!arg1[n]) {
-      return arg1[0] / 1 === arg2[n] / 1
-        ? arg2[n] / 1 - arg1[0] / 1
-        : arg1[0] / 1 - arg2[n] / 1;
-    } else {
-      return arg2[0] / 1 === arg1[n] / 1
-        ? arg1[n] / 1 - arg2[0] / 1
-        : arg2[0] / 1 - arg1[n] / 1;
-    }
-  } else if (arg1[n] / 1 > arg2[n] / 1) {
-    return -1;
-  } else if (arg1[n] / 1 < arg2[n] / 1) {
+function sortCallback(arg1, arg2) {
+  let [case1, case2] = [`${arg1}${arg2}`, `${arg2}${arg1}`];
+  if (case1 < case2) {
     return 1;
-  } else if (arg1[n] / 1 === arg2[n] / 1) {
-    return sortCallback(arg1, arg2, n + 1);
+  } else {
+    return -1;
   }
 }
