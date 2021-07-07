@@ -227,7 +227,6 @@ function solution(info, query) {
     }
     result.push(scores.length - left);
   }
-  console.log(result);
   return result;
 }
 
@@ -258,4 +257,67 @@ function makeInfoMap(options) {
     inF(1, options[0][i]);
   }
   return map;
+}
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+function solution(info, query) {
+  let map = {};
+  let result = [];
+  for (let i = 0; i < info.length; i++) {
+    let infos = info[i].split(" ");
+    combination(infos, 0, map, Number(infos.pop()));
+  }
+  for (let k in map) {
+    map[k].sort((a, b) => a - b);
+  }
+  for (let j = 0; j < query.length; j++) {
+    let queries = query[j].replace(/ and/g, "").split(" ");
+    let score = Number(queries.pop());
+    let n = binarySearch(score, queries, map);
+    result.push(n);
+  }
+  return result;
+}
+
+function combination(infos, idx, map, score) {
+  let val = infos.join("");
+
+  if (map[val]) {
+    map[val].push(score);
+  } else {
+    map[val] = [score];
+  }
+
+  for (let i = idx; i < infos.length; i++) {
+    let duplicate = infos.slice();
+    duplicate[i] = "-";
+    combination(duplicate, i + 1, map, score);
+  }
+}
+
+function binarySearch(score, queries, map) {
+  let scoreArr = map[queries.join("")];
+  if (scoreArr && scoreArr.length) {
+    let l = 0;
+    let r = scoreArr.length;
+
+    while (l < r) {
+      let m = parseInt((l + r) / 2, 10);
+      if (scoreArr[m] >= score) {
+        r = m;
+      } else if (scoreArr[m] < score) {
+        l = m + 1;
+      }
+    }
+    return scoreArr.length - l;
+  } else {
+    return 0;
+  }
 }
