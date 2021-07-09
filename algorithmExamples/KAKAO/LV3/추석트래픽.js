@@ -20,6 +20,7 @@ function solution(lines) {
     for (let j = 0; j < reqTime.length; j++) {
       let [l, r] = [eventTime[i], eventTime[i] + 999];
       if (l <= resTime[j] && reqTime[j] <= r) {
+        //if (reqTime[j] >= l && reqTime[j] < r) || (resTime[j] >= l && resTime[j] < r) || (reqTime[j] <= l && resTime[j] >= r)
         tMax++;
       }
     }
