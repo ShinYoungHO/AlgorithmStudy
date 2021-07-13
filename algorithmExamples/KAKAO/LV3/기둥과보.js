@@ -12,7 +12,7 @@ function solution(n, build_frame) {
   const isValid = (map) => {
     for (let x = 0; x <= n; x++) {
       for (let y = 0; y <= n; y++) {
-        if (!map[x][y] & 8) {
+        if (map[x][y] & 8) {
           if (!post(map, x, y)) return false;
         }
         if (map[x][y] & 2) {
