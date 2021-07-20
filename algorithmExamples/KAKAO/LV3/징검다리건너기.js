@@ -43,4 +43,32 @@ function findPath(stones, k){
     return [path, min]
 }
 
+
+
+
+
+function solution(stones, k) {
+    let l = 1; 
+    let r = 200000000;
+    
+    while(l < r - 1) {
+        let m = parseInt((l + r) / 2);
+        if (checkValid(stones, m, k))  l = m;
+        else r = m;
+        console.log(l, r)
+    }
+    
+    return l;
+}
+
+function checkValid(stones, m, k) {
+    let count = 0; 
+    for(let i = 0; i < stones.length; i++) {
+        if(stones[i] < m) count += 1;
+        else count = 0;
+        if(count >= k) return false;
+    } 
+    return true;
+}
+
 solution([2, 4, 5, 3, 2, 1, 4, 2, 5, 1], 3)
