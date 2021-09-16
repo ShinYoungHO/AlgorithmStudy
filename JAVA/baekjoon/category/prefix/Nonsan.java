@@ -1,5 +1,5 @@
 package category.prefix;
-// 19951 timeout
+// 19951 timeout -- naive
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
