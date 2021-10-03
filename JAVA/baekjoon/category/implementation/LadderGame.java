@@ -12,37 +12,31 @@ public class LadderGame {
     static int max;
     static int solved;
     static int result;
+    static int INF = Integer.MAX_VALUE;
+
     static void solve(int p){
-//        System.out.println(p);
         if(p == h){
             boolean test = isValid();
             if(test) if(result > solved) result = solved;
-//            System.out.println("====");
             return;
         }
         for(int i = 0; i <= max; i++){
-//            System.out.println(i);
-            ret(i, 0, p, 0);
+            if(solved < 3) ret(i, 0, p, 0);
         }
     }
 
     static void ret(int targetSwitch, int switched, int idx, int start){
-//        System.out.println(targetSwitch+":"+idx+":"+h);
         if(targetSwitch == switched && idx < h){
-//            System.out.println(1113123213);
-            for(int i = 0; i < n-1; i++) {
-                if (link[idx][i]) swap(i);
-//                System.out.println(link[idx][i]);
-            }
+            for(int i = 0; i < n-1; i++) if (link[idx][i]) swap(i);
             solve(idx + 1);
             for(int i = 0; i < n-1; i++) if(link[idx][i]) swap(i);
             return;
         }
         for(int i = start; i < n-1; i++){
-            if(!link[idx][i] &&( n-1 == n-1 || !link[idx][i+1])){
+            if(!link[idx][i] && ( i+1 >= n-1 || !link[idx][i+1]) && (i-1 < 0 ||  !link[idx][i-1])){
                 link[idx][i] = true;
                 solved++;
-                ret(targetSwitch, switched+1, idx, i);
+                if(solved<= 3) ret(targetSwitch, switched+1, idx, i);
                 link[idx][i] = false;
                 solved--;
             }
@@ -78,7 +72,7 @@ public class LadderGame {
         position = new int[n];
         max = (int)Math.ceil((double)(n-1)/(double)2);
         solved = 0;
-        result = Integer.MAX_VALUE;
+        result = INF;
 
         for(int i = 0; i < position.length; i++) position[i] = i;
 
@@ -90,6 +84,23 @@ public class LadderGame {
         }
 
         solve(0);
-        System.out.println(result);
+        System.out.println(result == INF ? -1 : result);
+    }
+
+    static void printLadder(){
+        for(int i = 0; i < h; i++){
+            System.out.print("|");
+            for(int j = 0; j < link[i].length; j++){
+                System.out.print(link[i][j] ? "__" : "  ");
+                System.out.print("|");
+            }
+            System.out.println("");
+            System.out.print("|");
+            for(int j = 0; j < link[i].length; j++){
+                System.out.print("  |");
+            }
+            System.out.println("");
+        }
+        System.out.println("\n-----------------");
     }
 }
